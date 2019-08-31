@@ -1,0 +1,7 @@
+# built binaries
+LibreELEC.USB-SD.Creator.Linux-64bit.bin
+LibreELEC.USB-SD.Creator.Linux-32bit.bin
+
+# crap
+.DS_Store
+.directory
