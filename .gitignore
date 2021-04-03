@@ -1,7 +1,13 @@
 # built binaries
 LibreELEC.USB-SD.Creator.Linux-64bit.bin
 LibreELEC.USB-SD.Creator.Linux-32bit.bin
+LibreELEC\ USB-SD\ Creator.app
+
+# language files
+*.qm
 
 # crap
 .DS_Store
 .directory
+.qmake.stash
+.generated_files
