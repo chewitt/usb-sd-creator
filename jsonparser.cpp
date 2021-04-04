@@ -33,7 +33,7 @@ bool compareVersion(const QVariantMap &imageMap1, const QVariantMap &imageMap2)
     // must compare only version not whole string
     // name-8.0.2.img.gz < name-8.0.2.1.img.gz
     // LibreELEC-WeTek_Hub.aarch64-8.0.2.1.img.gz
-    QRegExp regExp = QRegExp(".*-([0-9]{1,2}.[0-9]{1,2}.[0-9]{1,3}.[0-9]{1,2})+.*\\.img\\.gz");
+    QRegExp regExp = QRegExp(".*-([0-9]{1,2}.[0-9]{1,2}.[0-9]{1,3})+.*\\.img\\.gz");
     regExp.indexIn(imageMap1["name"].toString());
     QStringList versionStr1 = regExp.capturedTexts();
     regExp.indexIn(imageMap2["name"].toString());
