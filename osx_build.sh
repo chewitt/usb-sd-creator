@@ -58,7 +58,7 @@ echo ""
 echo "Signing..."
 xattr -cr "LibreELEC USB-SD Creator.app"
 codesign --deep -v -fs "LibreELEC" "LibreELEC USB-SD Creator.app"
-codesign -vvvv
+codesign -vvvv "LibreELEC USB-SD Creator.app"
 
 echo ""
 echo "Finished..."
