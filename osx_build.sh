@@ -56,15 +56,10 @@ cp -r dmg_osx/template.app/* "LibreELEC USB-SD Creator.app"
 
 echo ""
 echo "Signing..."
-# clean any extended attributes otherwise codesigning fails
 xattr -cr "LibreELEC USB-SD Creator.app"
-codesign -s "LibreELEC" --deep "LibreELEC USB-SD Creator.app"
+codesign --deep -v -fs "LibreELEC" "LibreELEC USB-SD Creator.app"
+codesign -vvvv
 
-echo ""
-echo "  To run application directly type"
-echo "    sudo \"LibreELEC USB-SD Creator.app/Contents/MacOS/LibreELEC USB-SD Creator\""
-echo ""
-echo "  Or run osx_make_dmg.sh script to create final .dmg file..."
 echo ""
 echo "Finished..."
 echo ""
