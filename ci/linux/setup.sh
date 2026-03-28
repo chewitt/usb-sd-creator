@@ -10,7 +10,7 @@
 
 set -euo pipefail
 
-QT_VERSION="${QT_VERSION:-6.7.2}"
+QT_VERSION="${QT_VERSION:-6.11.0}"
 QT_MAJOR_MINOR="${QT_VERSION%.*}"
 QT_PREFIX="${QT_PREFIX:-/opt/qt6-static}"
 QT_SRCDIR="${QT_SRCDIR:-/tmp/qt-build}"
@@ -39,7 +39,7 @@ echo "CMAKE_PREFIX_PATH=${QT_PREFIX}" >> "$GITHUB_ENV"
 
 # -- download Qt sources --
 
-QT_DOWNLOAD_BASE="https://download.qt.io/archive/qt/${QT_MAJOR_MINOR}/${QT_VERSION}/submodules"
+QT_DOWNLOAD_BASE="https://download.qt.io/official_releases/qt/${QT_MAJOR_MINOR}/${QT_VERSION}/submodules"
 
 mkdir -p "$QT_SRCDIR"
 cd "$QT_SRCDIR"
