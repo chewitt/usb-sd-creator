@@ -1,6 +1,9 @@
 name: Build
 on: [push, pull_request]
 
+env:
+  QT_VERSION: '6.7.2'
+
 jobs:
   build:
     runs-on: ${{ matrix.os }}
@@ -8,8 +11,12 @@ jobs:
       fail-fast: false
       matrix:
         include:
-        - os: ubuntu-22.04
+        - os: ubuntu-24.04
           platform: linux
+          arch: x86_64
+        - os: ubuntu-24.04-arm
+          platform: linux
+          arch: arm64
         - os: macos-latest
           platform: macos
           preset: release-macos
@@ -25,7 +32,17 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v4
+
+    - name: Cache static Qt
+      if: ${{ matrix.platform == 'linux' }}
+      id: cache-qt
+      uses: actions/cache@v4
+      with:
+        path: /opt/qt6-static
+        key: qt-static-${{ matrix.arch }}-${{ env.QT_VERSION }}-v1
+
     - name: Setup
+      if: ${{ steps.cache-qt.outcome == 'skipped' || steps.cache-qt.outputs.cache-hit != 'true' }}
       shell: bash
       run: |
         setupScript='ci/${{ matrix.platform }}/setup.sh'
@@ -35,8 +52,26 @@ jobs:
         MACOS_CODE_SIGN_KEY_BASE64: ${{ secrets.MACOS_CODE_SIGN_KEY_BASE64 }}
         MACOS_KEYCHAIN_PASSWORD: ${{ secrets.MACOS_KEYCHAIN_PASSWORD }}
 
+    - name: Install Linux build dependencies
+      if: ${{ matrix.platform == 'linux' && steps.cache-qt.outputs.cache-hit == 'true' }}
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y \
+          build-essential cmake \
+          libfontconfig1-dev libfreetype-dev \
+          libx11-dev libx11-xcb-dev libxext-dev libxfixes-dev \
+          libxi-dev libxrender-dev libxcb1-dev \
+          libxcb-cursor-dev libxcb-glx0-dev libxcb-icccm4-dev \
+          libxcb-image0-dev libxcb-keysyms1-dev libxcb-randr0-dev \
+          libxcb-render-util0-dev libxcb-shape0-dev libxcb-shm0-dev \
+          libxcb-sync-dev libxcb-xfixes0-dev libxcb-xinerama0-dev \
+          libxcb-xkb-dev libxkbcommon-dev libxkbcommon-x11-dev \
+          libssl-dev libdbus-1-dev \
+          libgl-dev \
+          libatspi2.0-dev
+
     - name: Install Qt
-      uses: jurplel/install-qt-action@v3
+      uses: jurplel/install-qt-action@v4
       if: ${{ matrix.useQtAction }}
       with:
         version: '6.7.2'
@@ -70,10 +105,26 @@ jobs:
 
     - name: Configure
       run: |
-        cmake --preset ${{ matrix.preset || 'release' }}
+        cmake --preset ${{ matrix.preset || 'release' }} ${{ matrix.platform == 'linux' && '-DCMAKE_PREFIX_PATH=/opt/qt6-static' || '' }}
     - name: Build
       run: |
         cmake --build --preset release
+
+    - name: Verify static linking
+      if: ${{ matrix.platform == 'linux' }}
+      run: |
+        echo "Binary size:"
+        ls -lh build/LibreELEC.USB-SD.Creator.Linux.bin
+        echo ""
+        echo "Dynamic dependencies:"
+        ldd build/LibreELEC.USB-SD.Creator.Linux.bin || true
+
+    - name: Rename Linux artifact
+      if: ${{ matrix.platform == 'linux' }}
+      run: |
+        mkdir -p build/cpack
+        cp build/LibreELEC.USB-SD.Creator.Linux.bin \
+           build/cpack/LibreELEC.USB-SD.Creator.Linux.${{ matrix.arch }}.bin
 
     - name: Pack
       if: ${{ matrix.cpack }}
@@ -87,9 +138,10 @@ jobs:
       if: ${{ matrix.platform == 'windows-msvc' }}
       run: |
         cpack --preset release -G ZIP
+
     - name: Artifact
       uses: actions/upload-artifact@v4
       with:
         path: build/cpack/LibreELEC.USB-SD.Creator.*
-        name: ${{ matrix.platform }}
+        name: ${{ matrix.platform == 'linux' && format('linux-{0}', matrix.arch) || matrix.platform }}
         compression-level: 0
