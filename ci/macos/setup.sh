@@ -2,13 +2,13 @@
 
 brew install ninja
 
-qtVersion='6.7.2'
+qtVersion='6.11.0'
 qtVersionWithoutDots=${qtVersion//./}
 
 cd ..
 for module in base tools ; do
   archive="$module.7z"
-  curl -L -o "$archive" "https://download.qt.io/online/qtsdkrepository/mac_x64/desktop/qt6_$qtVersionWithoutDots/qt.qt6.$qtVersionWithoutDots.clang_64/$qtVersion-0-202406110330qt$module-MacOS-MacOS_13-Clang-MacOS-MacOS_13-X86_64-ARM64.7z"
+  curl -L -o "$archive" "https://download.qt.io/online/qtsdkrepository/mac_x64/desktop/qt6_$qtVersionWithoutDots/qt6_$qtVersionWithoutDots/qt.qt6.$qtVersionWithoutDots.clang_64/$qtVersion-0-202603180533qt$module-MacOS-MacOS_15-Clang-MacOS-MacOS_15-X86_64-ARM64.7z"
   7z x "$archive" '-xr!*.dSYM'
 done
 echo "CMAKE_PREFIX_PATH=$PWD/$(ls -1 | fgrep 6.)/macos" >> $GITHUB_ENV
