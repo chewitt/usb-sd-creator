@@ -74,7 +74,7 @@ jobs:
       uses: jurplel/install-qt-action@v4
       if: ${{ matrix.useQtAction }}
       with:
-        version: '6.7.2'
+        version: '6.11.0'
         arch: 'win64_msvc2019_64'
         archives: 'qtbase qttools opengl32sw d3dcompiler_47'
         extra: '--external 7z'
