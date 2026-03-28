@@ -25,7 +25,6 @@ jobs:
           platform: windows-msvc
           preset: release-msvc
           cpack: true
-          useQtAction: true
         - os: windows-latest
           platform: windows-mingw
           preset: release-ninja
@@ -71,16 +70,6 @@ jobs:
           libgl-dev \
           libatspi2.0-dev
 
-    - name: Install Qt
-      uses: jurplel/install-qt-action@v4
-      if: ${{ matrix.useQtAction }}
-      with:
-        version: '6.11.0'
-        arch: 'win64_msvc2022_64'
-        archives: 'qtbase qttools opengl32sw d3dcompiler_47'
-        extra: '--external 7z'
-        cache: true
-        setup-python: false
     - name: Prepare MSVC environment
       uses: ilammy/msvc-dev-cmd@v1
       if: ${{ matrix.platform == 'windows-msvc' }}
