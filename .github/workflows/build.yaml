@@ -39,7 +39,7 @@ jobs:
       uses: actions/cache@v4
       with:
         path: /opt/qt6-static
-        key: qt-static-${{ matrix.arch }}-${{ env.QT_VERSION }}-v1
+        key: qt-static-${{ matrix.arch }}-${{ env.QT_VERSION }}-v2
 
     - name: Setup
       if: ${{ steps.cache-qt.outcome == 'skipped' || steps.cache-qt.outputs.cache-hit != 'true' }}
@@ -65,6 +65,7 @@ jobs:
           libxcb-image0-dev libxcb-keysyms1-dev libxcb-randr0-dev \
           libxcb-render-util0-dev libxcb-shape0-dev libxcb-shm0-dev \
           libxcb-sync-dev libxcb-xfixes0-dev libxcb-xinerama0-dev \
+          libxcb-util-dev \
           libxcb-xkb-dev libxkbcommon-dev libxkbcommon-x11-dev \
           libssl-dev libdbus-1-dev \
           libgl-dev \
@@ -75,7 +76,7 @@ jobs:
       if: ${{ matrix.useQtAction }}
       with:
         version: '6.11.0'
-        arch: 'win64_msvc2019_64'
+        arch: 'win64_msvc2022_64'
         archives: 'qtbase qttools opengl32sw d3dcompiler_47'
         extra: '--external 7z'
         cache: true
@@ -85,7 +86,7 @@ jobs:
       if: ${{ matrix.platform == 'windows-msvc' }}
       with:
         arch: x64
-        toolset: 14.29
+        toolset: 14.42
 
     - name: Setup msys2
       uses: msys2/setup-msys2@v2

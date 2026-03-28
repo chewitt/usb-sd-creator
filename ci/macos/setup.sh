@@ -11,7 +11,9 @@ for module in base tools ; do
   curl -L -o "$archive" "https://download.qt.io/online/qtsdkrepository/mac_x64/desktop/qt6_$qtVersionWithoutDots/qt6_$qtVersionWithoutDots/qt.qt6.$qtVersionWithoutDots.clang_64/$qtVersion-0-202603180533qt$module-MacOS-MacOS_15-Clang-MacOS-MacOS_15-X86_64-ARM64.7z"
   7z x "$archive" '-xr!*.dSYM'
 done
-echo "CMAKE_PREFIX_PATH=$PWD/$(ls -1 | fgrep 6.)/macos" >> $GITHUB_ENV
+qtPrefix=$(find "$PWD" -name Qt6Config.cmake -path '*/lib/cmake/Qt6/*' -print -quit)
+qtPrefix=${qtPrefix%/lib/cmake/Qt6/Qt6Config.cmake}
+echo "CMAKE_PREFIX_PATH=$qtPrefix" >> $GITHUB_ENV
 
 if [ "$MACOS_ASC_API_KEY" ]; then
   ascApiKey='ascApiKey.p8'

@@ -28,6 +28,7 @@ sudo apt-get install -y \
     libxcb-image0-dev libxcb-keysyms1-dev libxcb-randr0-dev \
     libxcb-render-util0-dev libxcb-shape0-dev libxcb-shm0-dev \
     libxcb-sync-dev libxcb-xfixes0-dev libxcb-xinerama0-dev \
+    libxcb-util-dev \
     libxcb-xkb-dev libxkbcommon-dev libxkbcommon-x11-dev \
     libssl-dev libdbus-1-dev \
     libgl-dev \
